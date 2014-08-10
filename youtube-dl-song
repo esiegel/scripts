@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Downloads a song from a youtube video.
+# Also optionally cuts the song from start to end.
+#   DEPENDS ON ffmpeg and youtube-dl
+
+if [ "$#" -lt 1 ]; then
+  echo "get_song.sh URL [START END]"
+  exit 1
+fi
+
+URL=$1
+START=$2
+END=$3
+
+# get mp3 of downloaded file
+ORIGINAL_FILENAME=$(youtube-dl --get-filename $URL)
+BASENAME=${ORIGINAL_FILENAME%.*}
+FILENAME=${BASENAME%.*}.mp3
+
+# download mp3
+youtube-dl -x --audio-format mp3 $URL
+
+if [ "$#" -eq 3 ]; then
+   # maybe cut mp3 from start to end
+   ffmpeg -i "$FILENAME" -ss $START -t $END -acodec copy "${BASENAME}_trim.mp3"
+
+   # delete original song
+   rm $FILENAME
+fi
