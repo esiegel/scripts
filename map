@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Applies a cmd to each line of the inputs.
+#   The input can come from either a file or stdin via a pipe.
+#   This is very similar to running:
+       # cat $SOMEFILE | xargs -I line my_cmd line
+
 # Determine the file to read from.
 # Either the first argument or stdin if from a pipe
 ftype=$(stat -f "%T" $stdin)
