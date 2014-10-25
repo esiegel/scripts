@@ -5,7 +5,7 @@
 #   DEPENDS ON ffmpeg and youtube-dl
 
 if [ "$#" -lt 1 ]; then
-  echo "get_song.sh URL [START END]"
+  echo "youtube-dl-song URL [START END]"
   exit 1
 fi
 
