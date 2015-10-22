@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+# ARGF will hold data from all filenames in ARGV or STDIN
+# Assume data passed in is ruby hash
+ruby_hash = eval(ARGF.read)
+json = JSON.pretty_generate(ruby_hash)
+
+print(json)
