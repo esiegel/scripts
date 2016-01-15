@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Searches input for JSON `{...}`
+#   The input can come from either a file or stdin via a pipe.
+       # find_json $SOMEFILE | xargs -I line my_cmd line
+
+# Determine the file to read from.
+# Either the first argument or stdin if from a pipe
+ftype=$(stat -f "%T" $stdin)
+if [[ "$ftype" != "|" ]]; then
+   if [[ "$#" -lt 1 ]]; then
+     echo "find_json FILE"
+     exit 1
+   fi
+
+   FILE=$1
+else
+   FILE=${FILE:-/dev/stdin}
+fi
+
+# print just the match
+sed -n 's/.*\({.*}\).*/\1/p' $FILE
