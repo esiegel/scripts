@@ -22,9 +22,19 @@ else
 fi
 
 # CMD defaults to echo if no args are passed
+# treats `{}` as variable substitution
 CMD=${CMD:-echo}
+
+# count number of `{}` in the command
+DELIMETER_COUNT=$(echo "$CMD" | awk '{print gsub(/{}/,"\1")}')
+
+if [[ $DELIMETER_COUNT == 0 ]]; then
+  # append delimeter to the end if it doesn't have one
+  CMD="$CMD {}"
+fi
 
 # Run command on each line of input.
 while read -r line; do
-   $CMD $line
-done < $FILE
+  EXPANDED_CMD=$(echo "$CMD" | sed -e "s/{}/$line/g")
+  $EXPANDED_CMD
+done < "$FILE"
