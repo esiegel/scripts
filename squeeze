@@ -16,5 +16,5 @@ else
    FILE=${FILE:-/dev/stdin}
 fi
 
-# Remove extra spaces
-cat $FILE | tr -s ' ' | sed -e 's/^[[:space:]]*//' | sed -e 's/[[:space:]]*$//'
+# Remove convert tabs to spaces, remove extra spaces and trim whitespace from beginning and end.
+cat $FILE | tr -s '\t' ' ' | sed -e 's/^[[:space:]]*//' | sed -e 's/[[:space:]]*$//'
