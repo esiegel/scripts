@@ -35,6 +35,10 @@ fi
 
 # Run command on each line of input.
 while read -r line; do
-  EXPANDED_CMD=$(echo "$CMD" | sed -e "s/{}/$line/g")
+  # escape characters that are disallowed by sed.
+  sanitized_line=$(echo $line | sed -e 's/[\/&]/\\&/g')
+
+  EXPANDED_CMD=$(echo "$CMD" | sed -e "s/{}/$sanitized_line/g")
+
   $EXPANDED_CMD
 done < "$FILE"
