@@ -5,9 +5,10 @@
 # Determine the file to read from.
 # Either the first argument or stdin if from a pipe
 ftype=$(stat -f "%T" $stdin)
+
 if [[ "$ftype" != "|" ]]; then
    if [[ "$#" -lt 1 ]]; then
-     echo "map FILE [CMD] [ARGS...]"
+     echo "squeeze FILE"
      exit 1
    fi
 
