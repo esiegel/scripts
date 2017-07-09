@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Takes a curl download command, probably copied from google,
+# transforms it to use aria2c, removes range headers etc.
+#
+# CURL_CMD should be in the format "curl 'URL' -H header1 -H header2"
+
+if [ ! "$#" -eq 2 ]; then
+  echo "download-curl-movie OUTPUT_NAME CURL_CMD"
+  exit 1
+fi
+
+OUTPUT_NAME=$1
+CURL_CMD=$2
+
+if [[ ! "$CURL_CMD" =~ ^curl.* ]]; then
+  echo "download-curl-movie OUTPUT_NAME CURL_CMD"
+  exit 1
+fi
+
+# Get url, which should be the second word in the CMD string.
+URL=$(echo "$CURL_CMD" | cut -d' ' -f 2)
+
+# keep just the options, third word and beyound
+CMD=$(echo "$CURL_CMD" | cut -d' ' -f 3-)
+
+# remove --compressed flag
+CMD=$(echo "$CMD" | sed 's/--compressed//g')
+
+# remove range header "-H 'range: bytes=5013504-967180966'"
+CMD=$(echo "$CMD" | sed "s/ -H 'range:[^']*'//g")
+
+# convert -H to --header
+CMD=$(echo "$CMD" | sed "s/-H/--header/g")
+
+# convert curl to aria2c for speed
+CMD="aria2c -x16 -o $OUTPUT_NAME $CMD $URL"
+
+echo "CMD"
+eval "$CMD"
