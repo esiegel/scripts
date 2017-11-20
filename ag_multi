@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Allows searching for multiple search queries using Silver Searcher
+# NOTE: Can be slow as it is is using xargs and invoking `ag` multiple times.
+
+if [[ "$#" -lt 1 ]]; then
+ echo "ag_multi QUERY [QUERY...]"
+ exit 1
+fi
+
+# construct the cmd starting with the first argument
+cmd="ag -l $1"
+shift
+
+# The remaining arguments have xargs prefix
+while [ $# -gt 0 ]
+do
+  cmd=$cmd" | xargs ag -l $1"
+  shift
+done
+
+eval $cmd
